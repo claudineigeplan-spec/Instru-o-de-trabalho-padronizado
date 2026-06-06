@@ -12,10 +12,14 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     api.get<DashboardData>("/dashboard").then((r) => {
       setData(r.data);
+    }).catch((err) => {
+      setError(err?.response?.data?.message ?? "Erro ao carregar dashboard. Tente recarregar a página.");
+    }).finally(() => {
       setLoading(false);
     });
   }, []);
@@ -24,6 +28,18 @@ export default function Dashboard() {
     return (
       <div className="p-6 flex items-center justify-center h-64">
         <div className="text-gray-400">Carregando...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6 flex items-center justify-center h-64">
+        <div className="text-red-400 bg-red-500/10 border border-red-500/30 rounded-xl px-6 py-4 text-center">
+          <div className="font-semibold mb-1">Erro ao carregar</div>
+          <div className="text-sm">{error}</div>
+          <button onClick={() => window.location.reload()} className="mt-3 text-xs text-red-300 underline">Recarregar</button>
+        </div>
       </div>
     );
   }
