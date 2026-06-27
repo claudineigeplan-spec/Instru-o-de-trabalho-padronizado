@@ -1,7 +1,21 @@
 /*
- * LogoPrimus — marca PRIMUS SGI com os três pontos maçônicos sobre o I.
- * O ponto do I é o vértice inferior do triângulo; os dois superiores completam o ∴
+ * LogoPrimus — marca PRIMUS SGI com três pontos maçônicos:
+ * ponto sobre o I de PRIMUS · ponto sobre o I de SGI · ponto final
  */
+
+function LetraI({ color = "text-white" }: { color?: string }) {
+  return (
+    <span className={`relative inline-block ${color}`}>
+      I
+      <span
+        aria-hidden="true"
+        className="absolute left-1/2 -translate-x-1/2 rounded-full bg-[#f97316] pointer-events-none select-none"
+        style={{ width: "5px", height: "5px", bottom: "100%", marginBottom: "0.08em" }}
+      />
+    </span>
+  );
+}
+
 export default function LogoPrimus({
   textSize = "text-xl",
   className = "",
@@ -13,37 +27,19 @@ export default function LogoPrimus({
     <span
       className={`font-bold tracking-wide inline-flex items-baseline leading-none ${textSize} ${className}`}
     >
+      {/* PRIMUS com ponto sobre o I */}
       <span className="text-white">PRIM</span>
-
-      {/* I com o triângulo maçônico */}
-      <span className="relative inline-block text-white">
-        I
-        <span
-          aria-hidden="true"
-          className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none select-none"
-          style={{ bottom: "100%", marginBottom: "0.1em", gap: "4px" }}
-        >
-          {/* dois pontos superiores */}
-          <span className="flex" style={{ gap: "7px" }}>
-            <span
-              className="rounded-full bg-[#f97316]"
-              style={{ width: "5px", height: "5px", opacity: 0.6 }}
-            />
-            <span
-              className="rounded-full bg-[#f97316]"
-              style={{ width: "5px", height: "5px", opacity: 0.6 }}
-            />
-          </span>
-          {/* ponto inferior — o "ponto do I" */}
-          <span
-            className="rounded-full bg-[#f97316]"
-            style={{ width: "6px", height: "6px", opacity: 0.95 }}
-          />
-        </span>
-      </span>
-
+      <LetraI />
       <span className="text-white">US</span>
-      <span className="text-[#f97316] ml-1">SGI</span>
+
+      <span className="mx-1" />
+
+      {/* SGI com ponto sobre o I */}
+      <span className="text-[#f97316]">SG</span>
+      <LetraI color="text-[#f97316]" />
+
+      {/* ponto final */}
+      <span className="text-[#f97316]">.</span>
     </span>
   );
 }
