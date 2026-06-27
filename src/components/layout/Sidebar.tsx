@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { useToast } from "../../hooks/useToast";
 import { formatRole } from "../../utils/format";
@@ -102,13 +102,15 @@ export default function Sidebar() {
   return (
     <aside className="w-64 bg-[#0a1628] border-r border-white/10 flex flex-col min-h-screen">
       <div className="p-6 border-b border-white/10">
-        <h1 className="text-white font-bold text-xl leading-tight tracking-wide">
-          PRIMUS
-          <span className="text-[#f97316]"> SGI</span>
-        </h1>
-        <p className="text-gray-500 text-xs mt-1">
-          Sistema de Gestão Integrado
-        </p>
+        <Link to="/" className="block group">
+          <h1 className="text-white font-bold text-xl leading-tight tracking-wide group-hover:opacity-80 transition-opacity">
+            PRIMUS
+            <span className="text-[#f97316]"> SGI</span>
+          </h1>
+          <p className="text-gray-500 text-xs mt-1">
+            Sistema de Gestão Integrado
+          </p>
+        </Link>
       </div>
 
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
@@ -131,6 +133,13 @@ export default function Sidebar() {
       </nav>
 
       <div className="p-4 border-t border-white/10 space-y-3">
+        <Link
+          to="/"
+          className="flex items-center gap-2 text-xs text-gray-500 hover:text-white transition-colors"
+        >
+          <span>🏠</span>
+          <span>Sobre o PRIMUS</span>
+        </Link>
         <div className="text-xs text-gray-500">
           <div className="text-white text-sm font-medium">{user?.name}</div>
           <div className="mt-0.5 text-orange-400">
