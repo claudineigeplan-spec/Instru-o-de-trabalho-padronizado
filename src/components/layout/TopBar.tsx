@@ -5,15 +5,20 @@ import api from "../../services/api";
 
 const TITULO_ROTA: Record<string, string> = {
   "/dashboard": "Dashboard",
-  "/equipamentos": "Frota",
+  "/projetos": "Projetos e Contratos",
+  "/engenharia": "Engenharia",
+  "/pcp": "PCP — Planejamento",
+  "/manutencao": "Manutenção",
+  "/suprimentos": "Suprimentos",
   "/instrucoes": "Instruções de Trabalho",
-  "/ordens-servico": "Ordens de Manutenção",
   "/checklists": "Checklists",
+  "/relatorios": "Relatórios",
+  "/usuarios": "Usuários",
+  "/equipamentos": "Frota",
+  "/ordens-servico": "Ordens de Manutenção",
   "/planos": "Planos de Manutenção",
   "/alertas": "Alertas",
   "/estoque": "Estoque",
-  "/usuarios": "Usuários",
-  "/relatorios": "Relatórios",
 };
 
 export default function TopBar() {
@@ -22,7 +27,7 @@ export default function TopBar() {
   const navigate = useNavigate();
   const [alertasNovos, setAlertasNovos] = useState(0);
 
-  const titulo = TITULO_ROTA[location.pathname] ?? "Gestão Integrada";
+  const titulo = TITULO_ROTA[location.pathname] ?? "PRIMUS SGI";
 
   useEffect(() => {
     api

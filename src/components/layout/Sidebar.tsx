@@ -13,26 +13,47 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { path: "/dashboard", label: "Dashboard", icon: "📊" },
-  { path: "/equipamentos", label: "Frota", icon: "🚛" },
-  { path: "/checklists", label: "Checklists", icon: "✅" },
+  {
+    path: "/projetos",
+    label: "Projetos e Contratos",
+    icon: "📁",
+    roles: ["gestor", "lider_campo"],
+  },
+  {
+    path: "/engenharia",
+    label: "Engenharia",
+    icon: "⚙️",
+    roles: ["gestor", "lider_campo"],
+  },
+  {
+    path: "/pcp",
+    label: "PCP — Planejamento",
+    icon: "🗓️",
+    roles: ["gestor", "lider_campo"],
+  },
+  {
+    path: "/manutencao",
+    label: "Manutenção",
+    icon: "🛠️",
+    roles: ["gestor", "lider_campo", "mecanico"],
+  },
+  {
+    path: "/suprimentos",
+    label: "Suprimentos",
+    icon: "📦",
+    roles: ["gestor", "lider_campo"],
+  },
   {
     path: "/instrucoes",
     label: "Instruções de Trabalho",
     icon: "📝",
     roles: ["gestor", "lider_campo", "mecanico"],
   },
-  { path: "/ordens-servico", label: "Ordens de Manutenção", icon: "🛠️" },
+  { path: "/checklists", label: "Checklists", icon: "✅" },
   {
-    path: "/planos",
-    label: "Planos de Manutenção",
-    icon: "📋",
-    roles: ["gestor", "lider_campo"],
-  },
-  { path: "/alertas", label: "Alertas", icon: "🔔" },
-  {
-    path: "/estoque",
-    label: "Estoque",
-    icon: "📦",
+    path: "/indicadores",
+    label: "Indicadores",
+    icon: "📉",
     roles: ["gestor", "lider_campo"],
   },
   { path: "/relatorios", label: "Relatórios", icon: "📈", roles: ["gestor"] },
@@ -57,15 +78,16 @@ export default function Sidebar() {
   return (
     <aside className="w-64 bg-[#0a1628] border-r border-white/10 flex flex-col min-h-screen">
       <div className="p-6 border-b border-white/10">
-        <h1 className="text-white font-bold text-lg leading-tight">
-          Gestão
-          <br />
-          <span className="text-[#f97316]">Integrada</span>
+        <h1 className="text-white font-bold text-xl leading-tight tracking-wide">
+          PRIMUS
+          <span className="text-[#f97316]"> SGI</span>
         </h1>
-        <p className="text-gray-500 text-xs mt-1">Manutenção &amp; Frota</p>
+        <p className="text-gray-500 text-xs mt-1">
+          Sistema de Gestão Integrado
+        </p>
       </div>
 
-      <nav className="flex-1 p-4 space-y-1">
+      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {visibleItems.map((item) => (
           <NavLink
             key={item.path}

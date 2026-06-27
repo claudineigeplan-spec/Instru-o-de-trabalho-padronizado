@@ -5,14 +5,30 @@ import { useToast } from "../hooks/useToast";
 import { resolveErrorMessage } from "../services/api";
 
 const PERFIS_DEMO = [
-  { label: "Gestor", email: "gestor@instrucao.com", color: "#f97316" },
-  { label: "Gestão / PCP", email: "lider@instrucao.com", color: "#3b82f6" },
+  { label: "Diretoria", email: "diretoria@instrucao.com", color: "#f5c518" },
+  {
+    label: "Gestor de Manutenção",
+    email: "gestor@instrucao.com",
+    color: "#f97316",
+  },
+  {
+    label: "Gestor de Produção",
+    email: "producao@instrucao.com",
+    color: "#3b82f6",
+  },
+  {
+    label: "Gestor de Suprimentos",
+    email: "suprimentos@instrucao.com",
+    color: "#06b6d4",
+  },
+  { label: "PCP", email: "pcp@instrucao.com", color: "#8b5cf6" },
   { label: "Mecânico", email: "mecanico@instrucao.com", color: "#10b981" },
   {
-    label: "Operador/Motorista",
+    label: "Operador de Máquinas",
     email: "operador@instrucao.com",
     color: "#a78bfa",
   },
+  { label: "Motorista", email: "motorista@instrucao.com", color: "#64748b" },
 ];
 
 export default function Login() {
@@ -46,12 +62,13 @@ export default function Login() {
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
           <Link to="/" className="inline-block">
-            <h1 className="text-3xl font-bold text-white">
-              Gestão <span className="text-[#f97316]">Integrada</span>
+            <h1 className="text-3xl font-bold tracking-wide">
+              <span className="text-white">PRIMUS</span>
+              <span className="text-[#f97316]"> SGI</span>
             </h1>
           </Link>
-          <p className="text-gray-400 mt-2 text-sm">
-            Manutenção · Frota · Suprimentos · Produção
+          <p className="text-gray-500 mt-2 text-sm">
+            Sistema de Gestão Integrado
           </p>
         </div>
 
@@ -95,9 +112,9 @@ export default function Login() {
         {/* Atalhos de perfil para demonstração */}
         <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4">
           <p className="text-xs text-gray-500 text-center mb-3">
-            Acesso rápido (senha: 123456)
+            Acesso rápido para demonstração · senha: 123456
           </p>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             {PERFIS_DEMO.map((p) => (
               <button
                 key={p.email}

@@ -29,12 +29,21 @@ class DatabaseSeeder extends Seeder
     private function seedUsuarios(): void
     {
         $usuarios = [
-            ['name' => 'Carlos Gestor',         'email' => 'gestor@instrucao.com',   'role' => 'gestor',       'setor' => 'Gestão'],
-            ['name' => 'Ana Líder de Campo',     'email' => 'lider@instrucao.com',    'role' => 'lider_campo',  'setor' => 'Operações'],
-            ['name' => 'João Mecânico',          'email' => 'mecanico@instrucao.com', 'role' => 'mecanico',     'setor' => 'Manutenção'],
-            ['name' => 'Pedro Operador',         'email' => 'operador@instrucao.com', 'role' => 'operador',     'setor' => 'Campo'],
-            ['name' => 'Fernando Encarregado',   'email' => 'encarregado@instrucao.com', 'role' => 'mecanico',  'setor' => 'Manutenção'],
-            ['name' => 'Waldemiro Operador',     'email' => 'waldemiro@instrucao.com','role' => 'operador',     'setor' => 'Campo'],
+            // Gestores
+            ['name' => 'Marcos Diretor',             'email' => 'diretoria@instrucao.com',    'role' => 'gestor',      'setor' => 'Diretoria'],
+            ['name' => 'Carlos Gestor de Manutenção','email' => 'gestor@instrucao.com',        'role' => 'gestor',      'setor' => 'Manutenção'],
+            // Líderes / PCP
+            ['name' => 'Ricardo Gestor de Produção', 'email' => 'producao@instrucao.com',     'role' => 'lider_campo', 'setor' => 'Produção'],
+            ['name' => 'Sandra Gestora de Suprimentos','email' => 'suprimentos@instrucao.com','role' => 'lider_campo', 'setor' => 'Suprimentos'],
+            ['name' => 'Fernanda PCP',               'email' => 'pcp@instrucao.com',          'role' => 'lider_campo', 'setor' => 'PCP'],
+            ['name' => 'Ana Líder de Campo',         'email' => 'lider@instrucao.com',        'role' => 'lider_campo', 'setor' => 'Operações'],
+            // Mecânicos
+            ['name' => 'João Mecânico',              'email' => 'mecanico@instrucao.com',     'role' => 'mecanico',    'setor' => 'Manutenção'],
+            ['name' => 'Fernando Encarregado',       'email' => 'encarregado@instrucao.com',  'role' => 'mecanico',    'setor' => 'Manutenção'],
+            // Operadores / Motoristas
+            ['name' => 'Pedro Operador de Máquinas', 'email' => 'operador@instrucao.com',     'role' => 'operador',    'setor' => 'Campo'],
+            ['name' => 'Paulo Motorista',            'email' => 'motorista@instrucao.com',    'role' => 'operador',    'setor' => 'Campo'],
+            ['name' => 'Waldemiro Operador',         'email' => 'waldemiro@instrucao.com',    'role' => 'operador',    'setor' => 'Campo'],
         ];
 
         foreach ($usuarios as $u) {

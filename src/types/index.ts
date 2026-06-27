@@ -103,11 +103,7 @@ export interface ModeloChecklist {
 }
 
 export type StatusOS =
-  | "aberta"
-  | "aprovada"
-  | "em_andamento"
-  | "concluida"
-  | "cancelada";
+  "aberta" | "aprovada" | "em_andamento" | "concluida" | "cancelada";
 export type PrioridadeOS = "baixa" | "media" | "alta" | "urgente";
 
 export interface PassoExecutado {

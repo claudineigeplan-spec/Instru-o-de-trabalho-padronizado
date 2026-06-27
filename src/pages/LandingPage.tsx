@@ -2,40 +2,64 @@ import { Link } from "react-router-dom";
 
 const BENEFICIOS = [
   {
-    icon: "✅",
-    titulo: "Checklists Pré-Operacionais",
+    icon: "📁",
+    titulo: "Contratos",
     descricao:
-      "Motoristas e operadores registram inspeções diárias no celular. Anomalias disparam OS automaticamente — o trecho não para por falha evitável.",
+      "Gestão completa do portfólio de contratos. Saldo, ciclos, serviços e medições em um só lugar.",
   },
   {
-    icon: "📝",
-    titulo: "Instruções de Trabalho Padronizadas",
+    icon: "🗓️",
+    titulo: "PCP / Planejamento",
     descricao:
-      "Cada manutenção tem seu passo a passo aprovado pela gestão. O mecânico executa com consistência, sem improvisar.",
+      "Programação diária, semanal e mensal de equipes, serviços e frentes de trabalho.",
   },
   {
-    icon: "🔗",
-    titulo: "Integração entre Departamentos",
+    icon: "📲",
+    titulo: "Apontamento de Campo",
     descricao:
-      "Manutenção, Produção, Suprimentos e PCP trabalham na mesma base. Cada área vê o que precisa e age no momento certo.",
+      "Registro de produção de campo em tempo real. Substitui planilhas e aplicativos externos.",
+  },
+  {
+    icon: "📐",
+    titulo: "Medição",
+    descricao:
+      "Apuração automática de serviços executados. Do apontamento ao boletim de medição.",
+  },
+  {
+    icon: "🛠️",
+    titulo: "Manutenção",
+    descricao:
+      "Gestão da frota e equipamentos. Ordens de serviço, preventiva e corretiva integradas ao planejamento.",
   },
   {
     icon: "📦",
-    titulo: "Estoque de Peças e Insumos",
+    titulo: "Suprimentos",
     descricao:
-      "Controle de estoque mínimo com alertas automáticos. Suprimentos recebe aviso antes de faltar peça na bancada.",
+      "Controle de estoque, requisições e insumos. Integrado ao planejamento e à produção.",
   },
   {
-    icon: "🔔",
-    titulo: "Alertas Automáticos de Vencimento",
+    icon: "⚙️",
+    titulo: "Engenharia",
     descricao:
-      "O sistema avisa quando a manutenção vence pelo horímetro, hodômetro ou calendário. Nada passa em branco.",
+      "Instruções de trabalho, composições de serviço e documentos técnicos para todos os setores.",
+  },
+  {
+    icon: "🚛",
+    titulo: "Logística",
+    descricao:
+      "Alocação de veículos, roteiros e deslocamentos integrados ao planejamento de campo.",
+  },
+  {
+    icon: "👷",
+    titulo: "Equipes",
+    descricao:
+      "Gestão de colaboradores, líderes e frentes. Produtividade e histórico por equipe.",
   },
   {
     icon: "📊",
-    titulo: "Relatórios para a Diretoria",
+    titulo: "Relatórios Executivos",
     descricao:
-      "Histórico completo de intervenções, custo por equipamento, desempenho de mecânicos e disponibilidade de frota.",
+      "Indicadores consolidados para gestão e diretoria. Planejado x realizado, custos e produtividade.",
   },
 ];
 
@@ -130,8 +154,10 @@ export default function LandingPage() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#0a1628]/80 backdrop-blur-md border-b border-white/10">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div>
-            <span className="font-bold text-white text-lg">Gestão </span>
-            <span className="font-bold text-[#f97316] text-lg">Integrada</span>
+            <span className="font-bold text-white text-xl tracking-wide">
+              PRIMUS
+            </span>
+            <span className="font-bold text-[#f97316] text-xl"> SGI</span>
           </div>
           <Link
             to="/login"
@@ -146,25 +172,25 @@ export default function LandingPage() {
       <section className="pt-32 pb-20 px-6">
         <div className="max-w-4xl mx-auto text-center space-y-6">
           <div className="inline-flex items-center gap-2 bg-[#f97316]/10 border border-[#f97316]/30 rounded-full px-4 py-1.5 text-sm text-[#f97316]">
-            🔗 Manutenção · Frota · Suprimentos
+            Plataforma Real-time Integrada de Management Unificado e Sistemas
           </div>
           <h2 className="text-5xl font-bold leading-tight">
-            O elo que conecta
+            Do planejamento ao campo,
             <br />
-            <span className="text-[#f97316]">manutenção, produção</span>
-            <br />e suprimentos
+            <span className="text-[#f97316]">tudo em um lugar.</span>
           </h2>
           <p className="text-gray-400 text-xl max-w-2xl mx-auto">
-            Checklists digitais e instruções de trabalho padronizadas garantem
-            que nenhum equipamento fique parado no trecho por falta de peça,
-            falha de programação ou manutenção esquecida.
+            Do contrato à medição, do planejamento ao campo — o PRIMUS integra
+            contratos, equipes, produção, manutenção e suprimentos em uma única
+            plataforma. Rastreabilidade total, eliminação de retrabalho e visão
+            executiva em tempo real para quem decide.
           </p>
           <div className="flex items-center justify-center gap-4 flex-wrap">
             <Link
               to="/login"
               className="bg-[#f97316] hover:bg-[#ea580c] text-white font-semibold px-8 py-3 rounded-xl text-lg transition-colors"
             >
-              Entrar na plataforma
+              Acessar o PRIMUS
             </Link>
             <a
               href="#fluxo"
@@ -281,24 +307,26 @@ export default function LandingPage() {
       <section className="py-20 px-6 border-t border-white/10">
         <div className="max-w-xl mx-auto text-center space-y-6">
           <h3 className="text-3xl font-bold">
-            Pronto para integrar sua operação?
+            O sistema que sua operação estava esperando.
           </h3>
           <p className="text-gray-400">
-            Checklists, instruções de trabalho e ordens de manutenção em um
-            único sistema. Nenhum equipamento parado por falta de comunicação.
+            Do contrato ao faturamento, do planejamento ao apontamento de campo
+            — o PRIMUS conecta cada setor, elimina retrabalho e entrega visão
+            executiva para quem decide.
           </p>
           <Link
             to="/login"
             className="inline-block bg-[#f97316] hover:bg-[#ea580c] text-white font-semibold px-10 py-3 rounded-xl text-lg transition-colors"
           >
-            Acessar a plataforma
+            Acessar o PRIMUS
           </Link>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="py-8 px-6 border-t border-white/10 text-center text-gray-600 text-sm">
-        Gestão Integrada — Manutenção · Frota · Suprimentos · Produção
+        PRIMUS — Sistema de Gestão Integrado · Contratos · PCP · Produção ·
+        Engenharia · Manutenção · Suprimentos · Logística · Medição · Relatórios
       </footer>
     </div>
   );
