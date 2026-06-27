@@ -49,7 +49,13 @@
       "Bash(git config *)",
       "Bash(cat)",
       "Bash(chmod +x /usr/local/bin/git-credential-manager)",
-      "Bash(git pull *)"
+      "Bash(git pull *)",
+      "Bash(chmod +x ~/start-itp.sh)",
+      "Bash(bash ~/start-itp.sh)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5174)",
+      "Bash(sudo npx playwright install-deps 2>&1)",
+      "Bash(sudo -n npx playwright install-deps 2>&1)",
+      "Bash(git commit *)"
     ]
   }
 }

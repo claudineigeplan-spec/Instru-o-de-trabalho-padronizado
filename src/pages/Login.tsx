@@ -6,15 +6,31 @@ import { resolveErrorMessage } from "../services/api";
 import LogoPrimus from "../components/ui/LogoPrimus";
 
 const PERFIS_DEMO = [
-  { label: "Diretoria",          email: "diretoria@instrucao.com",   color: "#f5c518" },
-  { label: "Gestor de Manutenção", email: "gestor@instrucao.com",    color: "#f97316" },
-  { label: "Gestor de Produção", email: "producao@instrucao.com",    color: "#3b82f6" },
-  { label: "Gestor de Suprimentos", email: "suprimentos@instrucao.com", color: "#06b6d4" },
-  { label: "Líder de Campo",     email: "lider@instrucao.com",       color: "#10b981" },
-  { label: "PCP",                email: "pcp@instrucao.com",         color: "#8b5cf6" },
-  { label: "Mecânico",           email: "mecanico@instrucao.com",    color: "#22d3ee" },
-  { label: "Operador de Máquinas", email: "operador@instrucao.com",  color: "#a78bfa" },
-  { label: "Motorista",          email: "motorista@instrucao.com",   color: "#64748b" },
+  { label: "Diretoria", email: "diretoria@instrucao.com", color: "#f5c518" },
+  {
+    label: "Gestor de Manutenção",
+    email: "gestor@instrucao.com",
+    color: "#f97316",
+  },
+  {
+    label: "Gestor de Produção",
+    email: "producao@instrucao.com",
+    color: "#3b82f6",
+  },
+  {
+    label: "Gestor de Suprimentos",
+    email: "suprimentos@instrucao.com",
+    color: "#06b6d4",
+  },
+  { label: "Líder de Campo", email: "lider@instrucao.com", color: "#10b981" },
+  { label: "PCP", email: "pcp@instrucao.com", color: "#8b5cf6" },
+  { label: "Mecânico", email: "mecanico@instrucao.com", color: "#22d3ee" },
+  {
+    label: "Operador de Máquinas",
+    email: "operador@instrucao.com",
+    color: "#a78bfa",
+  },
+  { label: "Motorista", email: "motorista@instrucao.com", color: "#64748b" },
 ];
 
 export default function Login() {
