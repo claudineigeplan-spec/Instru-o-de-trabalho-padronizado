@@ -21,23 +21,23 @@ export default function LogoPrimus({
         <span
           aria-hidden="true"
           className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none select-none"
-          style={{ bottom: "100%", marginBottom: "0.12em", gap: "3px" }}
+          style={{ bottom: "100%", marginBottom: "0.1em", gap: "4px" }}
         >
-          {/* dois pontos superiores — mais discretos */}
-          <span className="flex" style={{ gap: "5px" }}>
+          {/* dois pontos superiores */}
+          <span className="flex" style={{ gap: "7px" }}>
             <span
               className="rounded-full bg-[#f97316]"
-              style={{ width: "3px", height: "3px", opacity: 0.45 }}
+              style={{ width: "5px", height: "5px", opacity: 0.6 }}
             />
             <span
               className="rounded-full bg-[#f97316]"
-              style={{ width: "3px", height: "3px", opacity: 0.45 }}
+              style={{ width: "5px", height: "5px", opacity: 0.6 }}
             />
           </span>
-          {/* ponto inferior — o "ponto do I", levemente maior */}
+          {/* ponto inferior — o "ponto do I" */}
           <span
             className="rounded-full bg-[#f97316]"
-            style={{ width: "4px", height: "4px", opacity: 0.8 }}
+            style={{ width: "6px", height: "6px", opacity: 0.95 }}
           />
         </span>
       </span>

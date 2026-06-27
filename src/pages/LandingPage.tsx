@@ -165,8 +165,8 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="pt-28 pb-10 px-6">
-        <div className="max-w-4xl mx-auto text-center space-y-6">
+      <section className="pt-24 pb-6 px-6">
+        <div className="max-w-4xl mx-auto text-center space-y-5">
           <div className="inline-flex items-center gap-2 bg-[#f97316]/10 border border-[#f97316]/30 rounded-full px-4 py-1.5 text-sm text-[#f97316]">
             Plataforma Real-time Integrada de Management Unificado e Sistemas
           </div>
@@ -199,7 +199,7 @@ export default function LandingPage() {
       </section>
 
       {/* Fluxo operacional */}
-      <section id="fluxo" className="py-20 px-6 bg-white/2">
+      <section id="fluxo" className="py-12 px-6 bg-white/2">
         <div className="max-w-5xl mx-auto">
           <h3 className="text-3xl font-bold text-center mb-3">
             Como funciona o fluxo
