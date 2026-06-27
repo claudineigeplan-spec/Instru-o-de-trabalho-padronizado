@@ -1,21 +1,7 @@
 /*
- * LogoPrimus — marca PRIMUS SGI com três pontos maçônicos:
+ * LogoPrimus — três pontos maçônicos via <ruby>:
  * ponto sobre o I de PRIMUS · ponto sobre o I de SGI · ponto final
  */
-
-function LetraI({ color = "text-white" }: { color?: string }) {
-  return (
-    <span className={`relative inline-block ${color}`}>
-      I
-      <span
-        aria-hidden="true"
-        className="absolute left-1/2 -translate-x-1/2 rounded-full bg-[#f97316] pointer-events-none select-none"
-        style={{ width: "5px", height: "5px", bottom: "100%", marginBottom: "0.08em" }}
-      />
-    </span>
-  );
-}
-
 export default function LogoPrimus({
   textSize = "text-xl",
   className = "",
@@ -23,22 +9,37 @@ export default function LogoPrimus({
   textSize?: string;
   className?: string;
 }) {
+  const dot = (
+    <rt
+      style={{
+        fontSize: "0.45em",
+        color: "#f97316",
+        lineHeight: 1,
+        textAlign: "center",
+        rubyAlign: "center" as never,
+      }}
+    >
+      •
+    </rt>
+  );
+
   return (
     <span
       className={`font-bold tracking-wide inline-flex items-baseline leading-none ${textSize} ${className}`}
     >
-      {/* PRIMUS com ponto sobre o I */}
       <span className="text-white">PRIM</span>
-      <LetraI />
+      <ruby className="text-white" style={{ rubyAlign: "center" } as never}>
+        I{dot}
+      </ruby>
       <span className="text-white">US</span>
 
       <span className="mx-1" />
 
-      {/* SGI com ponto sobre o I */}
       <span className="text-[#f97316]">SG</span>
-      <LetraI color="text-[#f97316]" />
+      <ruby className="text-[#f97316]" style={{ rubyAlign: "center" } as never}>
+        I{dot}
+      </ruby>
 
-      {/* ponto final */}
       <span className="text-[#f97316]">.</span>
     </span>
   );
