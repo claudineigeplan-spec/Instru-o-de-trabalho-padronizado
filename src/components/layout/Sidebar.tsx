@@ -1,5 +1,5 @@
 import { NavLink, Link, useNavigate } from "react-router-dom";
-import TresPontos from "../ui/TresPontos";
+import LogoPrimus from "../ui/LogoPrimus";
 import { useAuth } from "../../hooks/useAuth";
 import { useToast } from "../../hooks/useToast";
 import { formatRole } from "../../utils/format";
@@ -103,12 +103,8 @@ export default function Sidebar() {
   return (
     <aside className="w-64 bg-[#0a1628] border-r border-white/10 flex flex-col min-h-screen">
       <div className="p-6 border-b border-white/10">
-        <Link to="/" className="block group">
-          <h1 className="text-white font-bold text-xl leading-tight tracking-wide group-hover:opacity-80 transition-opacity flex items-center">
-            PRIMUS
-            <TresPontos />
-            <span className="text-[#f97316]">SGI</span>
-          </h1>
+        <Link to="/" className="block group hover:opacity-80 transition-opacity">
+          <LogoPrimus textSize="text-xl" />
           <p className="text-gray-500 text-xs mt-1">
             Sistema de Gestão Integrado
           </p>

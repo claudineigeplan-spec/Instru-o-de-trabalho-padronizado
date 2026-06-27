@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useToast } from "../hooks/useToast";
 import { resolveErrorMessage } from "../services/api";
-import TresPontos from "../components/ui/TresPontos";
+import LogoPrimus from "../components/ui/LogoPrimus";
 
 const PERFIS_DEMO = [
   { label: "Diretoria",          email: "diretoria@instrucao.com",   color: "#f5c518" },
@@ -48,11 +48,7 @@ export default function Login() {
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
           <Link to="/" className="inline-block">
-            <h1 className="text-3xl font-bold tracking-wide flex items-center justify-center">
-              <span className="text-white">PRIMUS</span>
-              <TresPontos />
-              <span className="text-[#f97316]">SGI</span>
-            </h1>
+            <LogoPrimus textSize="text-3xl" />
           </Link>
           <p className="text-gray-500 mt-2 text-sm">
             Sistema de Gestão Integrado

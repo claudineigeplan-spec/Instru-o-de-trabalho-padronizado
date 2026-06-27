@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import TresPontos from "../components/ui/TresPontos";
+import LogoPrimus from "../components/ui/LogoPrimus";
 
 const BENEFICIOS = [
   {
@@ -154,11 +154,7 @@ export default function LandingPage() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#0a1628]/80 backdrop-blur-md border-b border-white/10">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center">
-            <span className="font-bold text-white text-xl tracking-wide">PRIMUS</span>
-            <TresPontos />
-            <span className="font-bold text-[#f97316] text-xl">SGI</span>
-          </div>
+          <LogoPrimus textSize="text-xl" />
           <Link
             to="/login"
             className="bg-[#f97316] hover:bg-[#ea580c] text-white font-semibold px-5 py-2 rounded-lg text-sm transition-colors"
@@ -169,7 +165,7 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="pt-32 pb-20 px-6">
+      <section className="pt-28 pb-10 px-6">
         <div className="max-w-4xl mx-auto text-center space-y-6">
           <div className="inline-flex items-center gap-2 bg-[#f97316]/10 border border-[#f97316]/30 rounded-full px-4 py-1.5 text-sm text-[#f97316]">
             Plataforma Real-time Integrada de Management Unificado e Sistemas
