@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import TresPontos from "../components/ui/TresPontos";
 
 const BENEFICIOS = [
   {
@@ -153,11 +154,10 @@ export default function LandingPage() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#0a1628]/80 backdrop-blur-md border-b border-white/10">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div>
-            <span className="font-bold text-white text-xl tracking-wide">
-              PRIMUS
-            </span>
-            <span className="font-bold text-[#f97316] text-xl"> SGI</span>
+          <div className="flex items-center">
+            <span className="font-bold text-white text-xl tracking-wide">PRIMUS</span>
+            <TresPontos />
+            <span className="font-bold text-[#f97316] text-xl">SGI</span>
           </div>
           <Link
             to="/login"
