@@ -1,7 +1,25 @@
 /*
- * LogoPrimus — três pontos maçônicos via <ruby>:
- * ponto sobre o I de PRIMUS · ponto sobre o I de SGI · ponto final
+ * LogoPrimus — três pontos maçônicos:
+ * • sobre o I de PRIMUS · • sobre o I de SGI · ponto final
  */
+function Idot({ white }: { white?: boolean }) {
+  return (
+    <span style={{ whiteSpace: "nowrap" }}>
+      <span style={{ color: white ? "#ffffff" : "#f97316" }}>I</span>
+      <sup
+        style={{
+          fontSize: "0.55em",
+          lineHeight: 0,
+          color: "#f97316",
+          fontWeight: "bold",
+        }}
+      >
+        •
+      </sup>
+    </span>
+  );
+}
+
 export default function LogoPrimus({
   textSize = "text-xl",
   className = "",
@@ -9,38 +27,16 @@ export default function LogoPrimus({
   textSize?: string;
   className?: string;
 }) {
-  const dot = (
-    <rt
-      style={{
-        fontSize: "0.45em",
-        color: "#f97316",
-        lineHeight: 1,
-        textAlign: "center",
-        rubyAlign: "center" as never,
-      }}
-    >
-      •
-    </rt>
-  );
-
   return (
     <span
-      className={`font-bold tracking-wide inline-flex items-baseline leading-none ${textSize} ${className}`}
+      className={`font-bold tracking-wide inline-flex items-baseline ${textSize} ${className}`}
     >
-      <span className="text-white">PRIM</span>
-      <ruby className="text-white" style={{ rubyAlign: "center" } as never}>
-        I{dot}
-      </ruby>
-      <span className="text-white">US</span>
-
-      <span className="mx-1" />
-
-      <span className="text-[#f97316]">SG</span>
-      <ruby className="text-[#f97316]" style={{ rubyAlign: "center" } as never}>
-        I{dot}
-      </ruby>
-
-      <span className="text-[#f97316]">.</span>
+      <span style={{ color: "#ffffff" }}>PRIM</span>
+      <Idot white />
+      <span style={{ color: "#ffffff" }}>US </span>
+      <span style={{ color: "#f97316" }}>SG</span>
+      <Idot />
+      <span style={{ color: "#f97316" }}>.</span>
     </span>
   );
 }
