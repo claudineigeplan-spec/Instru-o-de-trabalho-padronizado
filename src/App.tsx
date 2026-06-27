@@ -19,6 +19,10 @@ import Engenharia from "./pages/Engenharia";
 import PCP from "./pages/PCP";
 import Suprimentos from "./pages/Suprimentos";
 import Indicadores from "./pages/Indicadores";
+import Medicao from "./pages/Medicao";
+import Logistica from "./pages/Logistica";
+import Apontamento from "./pages/Apontamento";
+import Equipes from "./pages/Equipes";
 
 export default function App() {
   return (
@@ -37,6 +41,10 @@ export default function App() {
               <Route path="/manutencao" element={<OrdensServico />} />
               <Route path="/suprimentos" element={<Suprimentos />} />
               <Route path="/indicadores" element={<Indicadores />} />
+              <Route path="/medicao" element={<Medicao />} />
+              <Route path="/logistica" element={<Logistica />} />
+              <Route path="/apontamento" element={<Apontamento />} />
+              <Route path="/equipes" element={<Equipes />} />
               {/* Rotas legadas mantidas */}
               <Route path="/equipamentos" element={<Equipamentos />} />
               <Route path="/planos" element={<PlanosManutencao />} />

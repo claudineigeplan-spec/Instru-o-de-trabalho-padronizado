@@ -32,6 +32,30 @@ const navItems: NavItem[] = [
     roles: ["gestor", "lider_campo"],
   },
   {
+    path: "/medicao",
+    label: "Medição",
+    icon: "📐",
+    roles: ["gestor", "lider_campo"],
+  },
+  {
+    path: "/logistica",
+    label: "Logística",
+    icon: "🚛",
+    roles: ["gestor", "lider_campo"],
+  },
+  {
+    path: "/apontamento",
+    label: "Apontamento de Campo",
+    icon: "📲",
+    roles: ["gestor", "lider_campo"],
+  },
+  {
+    path: "/equipes",
+    label: "Equipes",
+    icon: "👷",
+    roles: ["gestor", "lider_campo"],
+  },
+  {
     path: "/manutencao",
     label: "Manutenção",
     icon: "🛠️",
