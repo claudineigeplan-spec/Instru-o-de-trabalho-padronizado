@@ -45,9 +45,9 @@ export default function LogoPrimus({
       className={`font-bold tracking-wide ${textSize} ${className}`}
       style={{ display: "inline-block", paddingTop: "10px", lineHeight: 1 }}
     >
-      <span style={{ color: "#ffffff" }}>PRIM</span>
+      <span style={{ color: "#ffffff" }}>PR</span>
       <IcomPonto color="#ffffff" />
-      <span style={{ color: "#ffffff" }}>US </span>
+      <span style={{ color: "#ffffff" }}>MUS </span>
       <span style={{ color: "#f97316" }}>SG</span>
       <IcomPonto color="#f97316" />
       <span style={{ color: "#f97316" }}>.</span>
