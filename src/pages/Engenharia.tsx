@@ -262,7 +262,7 @@ const documentos: Documento[] = [
   {
     id: 7,
     codigo: "DES-001",
-    titulo: "Projeto Geométrico — BR-163 KM 45–67",
+    titulo: "Projeto Geométrico — SP-595 Km 48–72",
     tipo: "drawing",
     versao: "Rev.B",
     revisao: "2024-02-14",
@@ -272,7 +272,7 @@ const documentos: Documento[] = [
   {
     id: 8,
     codigo: "DES-002",
-    titulo: "Seção Tipo Pavimentação — CON-2024-001",
+    titulo: "Seção Tipo Pavimentação — DER-2024-004 (SP-595)",
     tipo: "drawing",
     versao: "Rev.A",
     revisao: "2024-03-01",
@@ -372,14 +372,14 @@ const orcamentosIniciais: Orcamento[] = [
   {
     id: 1,
     codigo: "ORC-2024-001",
-    titulo: "Pavimentação Acesso Industrial — Lote 1",
-    cliente: "Prefeitura de Sinop",
+    titulo: "Recapeamento SP-595 — Km 48 a 72 (Proposta DER)",
+    cliente: "DER-SP",
     responsavel: "Ricardo",
-    data: "2024-06-10",
-    validade: "2024-09-10",
+    data: "2026-01-10",
+    validade: "2026-04-10",
     status: "aprovado",
     observacoes:
-      "Aprovado em reunião de 15/06/2024. Contrato gerado: CON-2024-002.",
+      "Aprovado pelo DER-SP em 15/01/2026. Contrato gerado: DER-2024-004.",
     itens: [
       {
         id: 1,
@@ -418,8 +418,8 @@ const orcamentosIniciais: Orcamento[] = [
   {
     id: 2,
     codigo: "ORC-2024-002",
-    titulo: "Drenagem Pluvial Zona Norte — Fase 2",
-    cliente: "SINFRA-MT",
+    titulo: "Terraplenagem Loteamento Industrial Norte — Fase 2",
+    cliente: "Prefeitura de Araçatuba",
     responsavel: "Fernanda",
     data: "2024-07-20",
     validade: "2024-10-20",
@@ -456,8 +456,8 @@ const orcamentosIniciais: Orcamento[] = [
   {
     id: 3,
     codigo: "ORC-2024-003",
-    titulo: "Recapeamento Av. das Araras — 2,5 km",
-    cliente: "SETOP / Cuiabá",
+    titulo: "Conserva SP-461 — Trecho Birigui/Penápolis (Nova proposta)",
+    cliente: "DER-SP",
     responsavel: "Ricardo",
     data: "2024-08-05",
     validade: "2024-11-05",
@@ -501,8 +501,8 @@ const orcamentosIniciais: Orcamento[] = [
   {
     id: 4,
     codigo: "ORC-2024-004",
-    titulo: "Manutenção de Estradas Vicinais — Lote 3",
-    cliente: "SINFRA-MT",
+    titulo: "Conserva SP-310 — Trecho Birigui/Araçatuba (Proposta DER-2)",
+    cliente: "DER-SP",
     responsavel: "Ana",
     data: "2024-09-01",
     validade: "2024-12-01",

@@ -31,11 +31,38 @@ export function formatTipoEquipamento(tipo: string): string {
 export function formatRole(role: string): string {
   const map: Record<string, string> = {
     gestor: "Gestor / Diretoria",
-    lider_campo: "Gestão / PCP",
+    diretor: "Diretor",
+    lider_campo: "Líder de Campo",
+    encarregado: "Encarregado",
     mecanico: "Mecânico",
-    operador: "Operador / Motorista",
+    operador: "Operador",
+    motorista: "Motorista",
+    engenheiro: "Engenheiro",
+    pcp: "PCP / Planejamento",
+    apontador: "Apontador",
+    almoxarife: "Almoxarife",
+    comprador: "Comprador",
+    rh: "RH / Dep. Pessoal",
+    qualidade: "Qualidade",
+    seguranca_trabalho: "Segurança do Trabalho",
+    financeiro: "Financeiro",
+    visitante_consulta: "Visitante",
   };
   return map[role] ?? role;
+}
+
+export function formatCurrency(value: number): string {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(value);
+}
+
+export function formatNumber(value: number, decimals = 2): string {
+  return new Intl.NumberFormat("pt-BR", {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  }).format(value);
 }
 
 export function formatStatusOS(status: string): string {

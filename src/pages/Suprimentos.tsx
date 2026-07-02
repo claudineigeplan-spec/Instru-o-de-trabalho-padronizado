@@ -338,7 +338,8 @@ const requisicoesIniciais: Requisicao[] = [
     data: "2024-06-18",
     prazo: "2024-06-25",
     status: "parcial",
-    justificativa: "Início do serviço COMP-006 no KM 147 da BR-163.",
+    justificativa:
+      "Início do serviço I-003 de drenagem no Lot. Industrial Norte.",
     itens: [
       {
         id: 1,

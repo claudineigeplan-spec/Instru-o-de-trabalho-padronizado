@@ -1,41 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GlassCard from "../components/ui/GlassCard";
 import GlassModal from "../components/ui/GlassModal";
 import { useAuth } from "../hooks/useAuth";
 import { useToast } from "../hooks/useToast";
+import { apontamentosService } from "../services/apontamentos";
+import { contratosService } from "../services/contratos";
+import { equipesService } from "../services/equipes";
+import { atividadesService } from "../services/atividades";
+import { resolveErrorMessage } from "../services/api";
+import type {
+  ApontamentoProducao,
+  Contrato,
+  EquipeCampo,
+  Atividade,
+  Trecho,
+  TurnoTrabalho,
+  StatusApontamento,
+} from "../types";
 
-type Turno = "manha" | "tarde" | "noite";
-type StatusApontamento = "rascunho" | "enviado" | "validado" | "rejeitado";
-
-interface Apontamento {
-  id: number;
-  codigo: string;
-  data: string;
-  turno: Turno;
-  equipe: string;
-  contrato_codigo: string;
-  localizacao: string;
-  composicao: string;
-  descricao_servico: string;
-  unidade: string;
-  quantidade: number;
-  equipamentos: string;
-  responsavel: string;
-  status: StatusApontamento;
-  observacoes: string;
-}
-
-/* ── Labels ──────────────────────────────────────────────── */
-
-const TURNO_LABEL: Record<Turno, string> = {
+const TURNO_LABEL: Record<TurnoTrabalho, string> = {
   manha: "Manhã",
   tarde: "Tarde",
   noite: "Noite",
+  integral: "Integral",
 };
-const TURNO_COR: Record<Turno, string> = {
+const TURNO_COR: Record<TurnoTrabalho, string> = {
   manha: "#f5c518",
   tarde: "#f97316",
   noite: "#8b5cf6",
+  integral: "#3b82f6",
 };
 
 const STATUS_LABEL: Record<StatusApontamento, string> = {
@@ -51,188 +44,26 @@ const STATUS_COR: Record<StatusApontamento, string> = {
   rejeitado: "#ef4444",
 };
 
-const EQUIPES = [
-  "Equipe A — Pavimentação",
-  "Equipe B — Terraplanagem",
-  "Equipe C — Drenagem",
-  "Equipe D — Conservação",
-];
-const CONTRATOS = [
-  "CON-2024-001",
-  "CON-2024-002",
-  "CON-2024-003",
-  "CON-2024-004",
-];
+const SENTIDOS = ["crescente", "decrescente", "ambos"];
+const LADOS = ["esquerdo", "direito", "ambos"];
 
-/* ── Dados fictícios ─────────────────────────────────────── */
+function localizacaoDe(a: ApontamentoProducao): string {
+  if (a.trecho) return a.trecho.descricao;
+  if (a.km_inicial != null && a.km_final != null) {
+    let s = `Km ${a.km_inicial}–${a.km_final}`;
+    if (a.sentido) s += ` · sentido ${a.sentido}`;
+    if (a.lado && a.lado !== "ambos") s += ` · lado ${a.lado}`;
+    return s;
+  }
+  return "—";
+}
 
-const apontamentosIniciais: Apontamento[] = [
-  {
-    id: 1,
-    codigo: "APT-2024-0621-A1",
-    data: "2024-06-27",
-    turno: "manha",
-    equipe: "Equipe A — Pavimentação",
-    contrato_codigo: "CON-2024-001",
-    localizacao: "BR-163 KM 147+200 a KM 147+800",
-    composicao: "COMP-001",
-    descricao_servico:
-      "Lançamento e compactação de CBUQ — camada de rolamento 4cm",
-    unidade: "t",
-    quantidade: 180,
-    equipamentos: "Acabadora DYNAPAC F1250C, Rolo RLO-8851",
-    responsavel: "Ana Líder",
-    status: "validado",
-    observacoes: "Temperatura do CBUQ OK. 3 cargas. Concluído 11h30.",
-  },
-  {
-    id: 2,
-    codigo: "APT-2024-0621-A2",
-    data: "2024-06-27",
-    turno: "manha",
-    equipe: "Equipe A — Pavimentação",
-    contrato_codigo: "CON-2024-001",
-    localizacao: "BR-163 KM 145+000 a KM 147+200",
-    composicao: "COMP-002",
-    descricao_servico: "Imprimação betuminosa com CM-30",
-    unidade: "m²",
-    quantidade: 4400,
-    equipamentos: "Distribuidor de asfalto, Vassoura mecânica",
-    responsavel: "Ana Líder",
-    status: "validado",
-    observacoes: "Superfície limpa e seca. Aplicação uniforme.",
-  },
-  {
-    id: 3,
-    codigo: "APT-2024-0621-B1",
-    data: "2024-06-27",
-    turno: "manha",
-    equipe: "Equipe B — Terraplanagem",
-    contrato_codigo: "CON-2024-001",
-    localizacao: "BR-163 KM 151+400 a KM 152+100",
-    composicao: "COMP-003",
-    descricao_servico: "Corte e aterro compactado — 1ª categoria",
-    unidade: "m³",
-    quantidade: 1840,
-    equipamentos:
-      "Escavadeira QHB-2841, Motoniveladora MTR-0412, Pá-carregadeira FNT-3320",
-    responsavel: "Fernando Enc.",
-    status: "validado",
-    observacoes: "Solo 1ª categoria. Grau de compactação conferido.",
-  },
-  {
-    id: 4,
-    codigo: "APT-2024-0621-C1",
-    data: "2024-06-27",
-    turno: "tarde",
-    equipe: "Equipe C — Drenagem",
-    contrato_codigo: "CON-2024-003",
-    localizacao: "Av. Norte, trecho KM 0+000 a KM 0+480",
-    composicao: "COMP-006",
-    descricao_servico: "Assentamento de manilha de concreto D=600mm",
-    unidade: "m",
-    quantidade: 120,
-    equipamentos: "Mini-retroescavadeira, Caminhão guindaste",
-    responsavel: "Fernanda PCP",
-    status: "enviado",
-    observacoes: "Assentamento com nivelamento a laser.",
-  },
-  {
-    id: 5,
-    codigo: "APT-2024-0621-D1",
-    data: "2024-06-27",
-    turno: "manha",
-    equipe: "Equipe D — Conservação",
-    contrato_codigo: "CON-2024-004",
-    localizacao: "MT-208 KM 0 a KM 18",
-    composicao: "COMP-008",
-    descricao_servico: "Roçada mecanizada de faixa de domínio",
-    unidade: "km",
-    quantidade: 18,
-    equipamentos: "Trator MTB-7730 + roçadeira lateral",
-    responsavel: "Ricardo Prod.",
-    status: "enviado",
-    observacoes: "Roçada bilateral 8m.",
-  },
-  {
-    id: 6,
-    codigo: "APT-2024-0620-A1",
-    data: "2024-06-26",
-    turno: "manha",
-    equipe: "Equipe A — Pavimentação",
-    contrato_codigo: "CON-2024-001",
-    localizacao: "BR-163 KM 146+400 a KM 147+000",
-    composicao: "COMP-001",
-    descricao_servico:
-      "Lançamento e compactação de CBUQ — camada de rolamento 4cm",
-    unidade: "t",
-    quantidade: 200,
-    equipamentos: "Acabadora DYNAPAC F1250C, Rolo RLO-8851, CMP-1184",
-    responsavel: "Ana Líder",
-    status: "validado",
-    observacoes: "2 cargas de CBUQ. Temperatura conferida.",
-  },
-  {
-    id: 7,
-    codigo: "APT-2024-0620-B1",
-    data: "2024-06-26",
-    turno: "tarde",
-    equipe: "Equipe B — Terraplanagem",
-    contrato_codigo: "CON-2024-001",
-    localizacao: "BR-163 KM 152+100 a KM 152+600",
-    composicao: "COMP-004",
-    descricao_servico: "Compactação de aterro — 95% Proctor normal",
-    unidade: "m²",
-    quantidade: 9200,
-    equipamentos: "Compactador CMP-1184, Motoniveladora MTR-0412",
-    responsavel: "Fernando Enc.",
-    status: "validado",
-    observacoes: "",
-  },
-  {
-    id: 8,
-    codigo: "APT-2024-0619-D1",
-    data: "2024-06-25",
-    turno: "manha",
-    equipe: "Equipe D — Conservação",
-    contrato_codigo: "CON-2024-004",
-    localizacao: "MT-208 KM 18 a KM 36",
-    composicao: "COMP-009",
-    descricao_servico: "Tapa-buracos com CBUQ a quente",
-    unidade: "m²",
-    quantidade: 95,
-    equipamentos: "Caminhão CMB-5523, Placa compactadora",
-    responsavel: "Ricardo Prod.",
-    status: "rejeitado",
-    observacoes:
-      "Rejeitado: material aplicado fora da temperatura mínima. Refazer.",
-  },
-  {
-    id: 9,
-    codigo: "APT-2024-0627-B2",
-    data: "2024-06-27",
-    turno: "tarde",
-    equipe: "Equipe B — Terraplanagem",
-    contrato_codigo: "CON-2024-001",
-    localizacao: "BR-163 KM 152+600 a KM 153+200",
-    composicao: "COMP-003",
-    descricao_servico: "Corte e aterro compactado — 1ª categoria",
-    unidade: "m³",
-    quantidade: 0,
-    equipamentos: "Escavadeira QHB-2841",
-    responsavel: "Fernando Enc.",
-    status: "rascunho",
-    observacoes: "Em andamento — apontamento do turno da tarde.",
-  },
-];
-
-/* ── Utilitários ─────────────────────────────────────────── */
-
-function agruparPorData(lista: Apontamento[]) {
-  const map = new Map<string, Apontamento[]>();
+function agruparPorData(lista: ApontamentoProducao[]) {
+  const map = new Map<string, ApontamentoProducao[]>();
   lista.forEach((a) => {
-    if (!map.has(a.data)) map.set(a.data, []);
-    map.get(a.data)!.push(a);
+    const d = a.data.slice(0, 10);
+    if (!map.has(d)) map.set(d, []);
+    map.get(d)!.push(a);
   });
   return [...map.entries()].sort(([a], [b]) => b.localeCompare(a));
 }
@@ -240,135 +71,196 @@ function agruparPorData(lista: Apontamento[]) {
 const FORM_VAZIO = {
   codigo: "",
   data: new Date().toISOString().split("T")[0],
-  turno: "manha" as Turno,
-  equipe: EQUIPES[0],
-  contrato_codigo: CONTRATOS[0],
-  localizacao: "",
-  composicao: "",
-  descricao_servico: "",
+  turno: "manha" as TurnoTrabalho,
+  contrato_id: "",
+  equipe_id: "",
+  atividade_id: "",
+  trecho_id: "",
+  km_inicial: "",
+  km_final: "",
+  sentido: "",
+  lado: "",
+  quantidade_executada: "",
   unidade: "m²",
-  quantidade: "",
-  equipamentos: "",
-  responsavel: "",
   observacoes: "",
 };
-
-/* ═══════════════════════════════════════════════════════════
-   Componente principal
-═══════════════════════════════════════════════════════════ */
+type FormState = typeof FORM_VAZIO;
 
 export default function Apontamento() {
   const { user } = useAuth();
   const toast = useToast();
   const podeEditar = user?.role === "gestor" || user?.role === "lider_campo";
 
-  const [lista, setLista] = useState<Apontamento[]>(apontamentosIniciais);
+  const [lista, setLista] = useState<ApontamentoProducao[]>([]);
+  const [contratos, setContratos] = useState<Contrato[]>([]);
+  const [equipes, setEquipes] = useState<EquipeCampo[]>([]);
+  const [atividades, setAtividades] = useState<Atividade[]>([]);
+  const [trechosContrato, setTrechosContrato] = useState<Trecho[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const [busca, setBusca] = useState("");
   const [filtroEquipe, setFiltroEquipe] = useState("");
   const [filtroStatus, setFiltroStatus] = useState<StatusApontamento | "">("");
   const [filtroData, setFiltroData] = useState("");
-  const [detalhe, setDetalhe] = useState<Apontamento | null>(null);
+  const [detalhe, setDetalhe] = useState<ApontamentoProducao | null>(null);
   const [modalNovo, setModalNovo] = useState(false);
-  const [editando, setEditando] = useState<Apontamento | null>(null);
-  const [form, setForm] = useState({ ...FORM_VAZIO });
+  const [editando, setEditando] = useState<ApontamentoProducao | null>(null);
+  const [form, setForm] = useState<FormState>({ ...FORM_VAZIO });
   const [visao, setVisao] = useState<"agrupada" | "lista">("agrupada");
 
+  function carregar() {
+    setLoading(true);
+    Promise.all([
+      apontamentosService.listar(),
+      contratosService.listar(),
+      equipesService.listar(),
+      atividadesService.listar(),
+    ])
+      .then(([a, c, e, at]) => {
+        setLista(a);
+        setContratos(c);
+        setEquipes(e);
+        setAtividades(at);
+      })
+      .catch((err) => toast.error(resolveErrorMessage(err)))
+      .finally(() => setLoading(false));
+  }
+
+  useEffect(() => {
+    carregar();
+  }, []);
+
+  useEffect(() => {
+    if (!form.contrato_id) {
+      setTrechosContrato([]);
+      return;
+    }
+    contratosService
+      .buscar(Number(form.contrato_id))
+      .then((c) => setTrechosContrato(c.trechos ?? []))
+      .catch(() => setTrechosContrato([]));
+  }, [form.contrato_id]);
+
   const filtrada = lista.filter((a) => {
-    const eq = !filtroEquipe || a.equipe === filtroEquipe;
+    const eq = !filtroEquipe || String(a.equipe_id) === filtroEquipe;
     const st = !filtroStatus || a.status === filtroStatus;
-    const dt = !filtroData || a.data === filtroData;
+    const dt = !filtroData || a.data.slice(0, 10) === filtroData;
+    const b = busca.toLowerCase();
     const bk =
-      !busca ||
-      a.descricao_servico.toLowerCase().includes(busca.toLowerCase()) ||
-      a.localizacao.toLowerCase().includes(busca.toLowerCase()) ||
-      a.codigo.toLowerCase().includes(busca.toLowerCase());
+      !b ||
+      (a.atividade?.nome ?? "").toLowerCase().includes(b) ||
+      a.codigo.toLowerCase().includes(b);
     return eq && st && dt && bk;
   });
 
-  /* KPIs */
   const hoje = new Date().toISOString().split("T")[0];
-  const apontamentosHoje = lista.filter((a) => a.data === hoje).length;
+  const apontamentosHoje = lista.filter(
+    (a) => a.data.slice(0, 10) === hoje,
+  ).length;
   const validadosHoje = lista.filter(
-    (a) => a.data === hoje && a.status === "validado",
+    (a) => a.data.slice(0, 10) === hoje && a.status === "validado",
   ).length;
   const pendentesValidacao = lista.filter((a) => a.status === "enviado").length;
   const rejeitados = lista.filter((a) => a.status === "rejeitado").length;
 
-  function abrirNovo(a?: Apontamento) {
+  function setField<K extends keyof FormState>(key: K, value: FormState[K]) {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function abrirNovo(a?: ApontamentoProducao) {
     setEditando(a ?? null);
     setForm(
       a
         ? {
             codigo: a.codigo,
-            data: a.data,
+            data: a.data.slice(0, 10),
             turno: a.turno,
-            equipe: a.equipe,
-            contrato_codigo: a.contrato_codigo,
-            localizacao: a.localizacao,
-            composicao: a.composicao,
-            descricao_servico: a.descricao_servico,
+            contrato_id: String(a.contrato_id),
+            equipe_id: String(a.equipe_id ?? ""),
+            atividade_id: String(a.atividade_id),
+            trecho_id: String(a.trecho_id ?? ""),
+            km_inicial: a.km_inicial != null ? String(a.km_inicial) : "",
+            km_final: a.km_final != null ? String(a.km_final) : "",
+            sentido: a.sentido ?? "",
+            lado: a.lado ?? "",
+            quantidade_executada: String(a.quantidade_executada),
             unidade: a.unidade,
-            quantidade: String(a.quantidade),
-            equipamentos: a.equipamentos,
-            responsavel: a.responsavel,
-            observacoes: a.observacoes,
+            observacoes: a.observacoes ?? "",
           }
-        : { ...FORM_VAZIO, responsavel: user?.name ?? "" },
+        : { ...FORM_VAZIO, codigo: `AP-${Date.now().toString().slice(-8)}` },
     );
     setModalNovo(true);
   }
 
-  function salvar() {
-    if (!form.codigo || !form.descricao_servico || !form.localizacao) {
-      toast.error("Preencha código, serviço e localização.");
+  async function salvar() {
+    if (!form.codigo || !form.contrato_id || !form.atividade_id) {
+      toast.error("Preencha código, contrato e atividade.");
       return;
     }
-    if (editando) {
-      setLista((p) =>
-        p.map((a) =>
-          a.id === editando.id
-            ? { ...a, ...form, quantidade: Number(form.quantidade) || 0 }
-            : a,
-        ),
-      );
-      toast.success("Apontamento atualizado.");
-    } else {
-      setLista((p) => [
-        {
-          id: Date.now(),
-          ...form,
-          quantidade: Number(form.quantidade) || 0,
-          status: "rascunho",
-        },
-        ...p,
-      ]);
-      toast.success("Apontamento criado.");
+    const payload = {
+      codigo: form.codigo,
+      contrato_id: Number(form.contrato_id),
+      equipe_id: form.equipe_id ? Number(form.equipe_id) : undefined,
+      atividade_id: Number(form.atividade_id),
+      trecho_id: form.trecho_id ? Number(form.trecho_id) : undefined,
+      data: form.data,
+      turno: form.turno,
+      km_inicial: form.km_inicial ? Number(form.km_inicial) : undefined,
+      km_final: form.km_final ? Number(form.km_final) : undefined,
+      sentido: form.sentido || undefined,
+      lado: form.lado || undefined,
+      quantidade_executada: Number(form.quantidade_executada) || 0,
+      unidade: form.unidade,
+      observacoes: form.observacoes || undefined,
+    };
+    try {
+      if (editando) {
+        await apontamentosService.atualizar(editando.id, payload);
+        toast.success("Apontamento atualizado.");
+      } else {
+        await apontamentosService.criar(payload);
+        toast.success("Apontamento criado.");
+      }
+      setModalNovo(false);
+      carregar();
+    } catch (err) {
+      toast.error(resolveErrorMessage(err));
     }
-    setModalNovo(false);
   }
 
-  function validar(id: number) {
-    setLista((p) =>
-      p.map((a) => (a.id === id ? { ...a, status: "validado" } : a)),
-    );
-    toast.success("Apontamento validado.");
+  async function enviar(id: number) {
+    try {
+      await apontamentosService.enviar(id);
+      toast.success("Apontamento enviado para validação.");
+      carregar();
+    } catch (err) {
+      toast.error(resolveErrorMessage(err));
+    }
   }
-  function rejeitar(id: number) {
-    setLista((p) =>
-      p.map((a) => (a.id === id ? { ...a, status: "rejeitado" } : a)),
-    );
-    toast.error("Apontamento rejeitado.");
+  async function validar(id: number) {
+    try {
+      await apontamentosService.validar(id);
+      toast.success("Apontamento validado.");
+      carregar();
+    } catch (err) {
+      toast.error(resolveErrorMessage(err));
+    }
   }
-  function enviar(id: number) {
-    setLista((p) =>
-      p.map((a) => (a.id === id ? { ...a, status: "enviado" } : a)),
-    );
-    toast.success("Apontamento enviado para validação.");
+  async function rejeitar(id: number) {
+    const motivo = prompt("Motivo da rejeição:");
+    if (!motivo) return;
+    try {
+      await apontamentosService.rejeitar(id, motivo);
+      toast.error("Apontamento rejeitado.");
+      carregar();
+    } catch (err) {
+      toast.error(resolveErrorMessage(err));
+    }
   }
 
   const gruposPorData = agruparPorData(filtrada);
 
-  function CardApontamento({ a }: { a: Apontamento }) {
+  function CardApontamento({ a }: { a: ApontamentoProducao }) {
     return (
       <div
         className="bg-white/5 border border-white/10 rounded-xl p-4 hover:border-white/20 transition-all"
@@ -400,12 +292,13 @@ export default function Apontamento() {
               </span>
             </div>
             <div className="text-white font-semibold text-sm mt-1">
-              {a.descricao_servico}
+              {a.atividade?.nome}
             </div>
-            <div className="text-gray-400 text-xs mt-0.5">{a.localizacao}</div>
+            <div className="text-gray-400 text-xs mt-0.5">
+              {localizacaoDe(a)}
+            </div>
             <div className="text-gray-500 text-xs mt-1">
-              {a.equipe} · {a.contrato_codigo}
-              {a.equipamentos ? ` · ${a.equipamentos}` : ""}
+              {a.equipe?.nome ?? "—"} · {a.contrato?.numero ?? "—"}
             </div>
             {a.observacoes && (
               <div className="text-gray-500 text-xs mt-1 italic">
@@ -415,12 +308,11 @@ export default function Apontamento() {
           </div>
           <div className="text-right shrink-0">
             <div className="text-white font-bold text-lg">
-              {a.quantidade > 0 ? a.quantidade.toLocaleString("pt-BR") : "—"}
+              {a.quantidade_executada > 0
+                ? Number(a.quantidade_executada).toLocaleString("pt-BR")
+                : "—"}
             </div>
             <div className="text-gray-400 text-xs">{a.unidade}</div>
-            <div className="text-gray-400 text-xs font-mono mt-1">
-              {a.composicao}
-            </div>
           </div>
         </div>
         {podeEditar && (
@@ -471,7 +363,6 @@ export default function Apontamento() {
 
   return (
     <div className="p-6 space-y-5">
-      {/* Cabeçalho */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white">Apontamento de Campo</h1>
         {podeEditar && (
@@ -484,7 +375,6 @@ export default function Apontamento() {
         )}
       </div>
 
-      {/* KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <GlassCard>
           <div className="text-gray-400 text-xs mb-1">Apontamentos Hoje</div>
@@ -514,7 +404,7 @@ export default function Apontamento() {
           <div className="text-xs text-gray-400 mt-1">requerem correção</div>
         </GlassCard>
         <GlassCard>
-          <div className="text-gray-400 text-xs mb-1">Total (semana)</div>
+          <div className="text-gray-400 text-xs mb-1">Total</div>
           <div className="text-3xl font-bold text-[#f97316]">
             {lista.length}
           </div>
@@ -524,13 +414,12 @@ export default function Apontamento() {
         </GlassCard>
       </div>
 
-      {/* Filtros */}
       <div className="flex gap-3 flex-wrap">
         <input
           type="text"
           value={busca}
           onChange={(e) => setBusca(e.target.value)}
-          placeholder="Buscar serviço ou localização..."
+          placeholder="Buscar serviço ou código..."
           className="flex-1 min-w-48 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#f97316]/50"
         />
         <input
@@ -542,12 +431,12 @@ export default function Apontamento() {
         <select
           value={filtroEquipe}
           onChange={(e) => setFiltroEquipe(e.target.value)}
-          className="bg-[#0a1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-w-[160px]"
+          className="bg-[#0a1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-w-[180px]"
         >
           <option value="">Todas as equipes</option>
-          {EQUIPES.map((eq) => (
-            <option key={eq} value={eq}>
-              {eq}
+          {equipes.map((eq) => (
+            <option key={eq.id} value={eq.id}>
+              {eq.nome}
             </option>
           ))}
         </select>
@@ -582,8 +471,11 @@ export default function Apontamento() {
         </div>
       </div>
 
-      {/* Conteúdo */}
-      {filtrada.length === 0 ? (
+      {loading ? (
+        <GlassCard className="text-center py-10">
+          <div className="text-gray-400">Carregando apontamentos...</div>
+        </GlassCard>
+      ) : filtrada.length === 0 ? (
         <GlassCard className="text-center py-10">
           <div className="text-gray-400">Nenhum apontamento encontrado.</div>
         </GlassCard>
@@ -623,13 +515,14 @@ export default function Apontamento() {
         open={!!detalhe}
         onClose={() => setDetalhe(null)}
         title={detalhe?.codigo ?? ""}
+        size="lg"
       >
         {detalhe && (
           <div className="space-y-4 text-sm">
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div>
                 <span className="text-gray-400">Data:</span>{" "}
-                <span className="text-white">{detalhe.data}</span>
+                <span className="text-white">{detalhe.data.slice(0, 10)}</span>
               </div>
               <div>
                 <span className="text-gray-400">Turno:</span>{" "}
@@ -639,15 +532,21 @@ export default function Apontamento() {
               </div>
               <div>
                 <span className="text-gray-400">Equipe:</span>{" "}
-                <span className="text-white">{detalhe.equipe}</span>
+                <span className="text-white">
+                  {detalhe.equipe?.nome ?? "—"}
+                </span>
               </div>
               <div>
                 <span className="text-gray-400">Contrato:</span>{" "}
-                <span className="text-white">{detalhe.contrato_codigo}</span>
+                <span className="text-orange-400">
+                  {detalhe.contrato?.numero ?? "—"}
+                </span>
               </div>
               <div>
                 <span className="text-gray-400">Responsável:</span>{" "}
-                <span className="text-white">{detalhe.responsavel}</span>
+                <span className="text-white">
+                  {detalhe.responsavel?.name ?? "—"}
+                </span>
               </div>
               <div>
                 <span className="text-gray-400">Status:</span>{" "}
@@ -656,44 +555,51 @@ export default function Apontamento() {
                 </span>
               </div>
             </div>
+
+            {(detalhe.km_inicial != null || detalhe.trecho) && (
+              <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 text-xs grid grid-cols-2 gap-2">
+                <div className="col-span-2">
+                  <span className="text-gray-400">Localização:</span>{" "}
+                  <span className="text-blue-300 font-semibold">
+                    {localizacaoDe(detalhe)}
+                  </span>
+                </div>
+                {detalhe.sentido && (
+                  <div>
+                    <span className="text-gray-400">Sentido:</span>{" "}
+                    <span className="text-white">{detalhe.sentido}</span>
+                  </div>
+                )}
+                {detalhe.lado && (
+                  <div>
+                    <span className="text-gray-400">Lado:</span>{" "}
+                    <span className="text-white">{detalhe.lado}</span>
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="bg-white/5 rounded-lg p-4 space-y-2">
               <div className="text-gray-400 text-xs">Serviço</div>
               <div className="text-white font-semibold">
-                {detalhe.descricao_servico}
+                {detalhe.atividade?.nome}
               </div>
-              <div className="flex items-center gap-4 mt-2">
-                <div>
-                  <span className="text-gray-400 text-xs">Ref.:</span>{" "}
-                  <span className="font-mono text-[#f97316] text-sm ml-1">
-                    {detalhe.composicao}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-gray-400 text-xs">Qtd.:</span>{" "}
-                  <span className="text-white font-bold text-lg ml-1">
-                    {detalhe.quantidade.toLocaleString("pt-BR")}{" "}
-                    {detalhe.unidade}
-                  </span>
-                </div>
+              <div className="text-gray-400 text-xs">
+                Qtd.:{" "}
+                <span className="text-white font-bold text-lg ml-1">
+                  {Number(detalhe.quantidade_executada).toLocaleString("pt-BR")}{" "}
+                  {detalhe.unidade}
+                </span>
               </div>
             </div>
-            <div>
-              <span className="text-gray-400 text-xs">Localização:</span>
-              <div className="text-white text-sm mt-0.5">
-                {detalhe.localizacao}
-              </div>
-            </div>
-            {detalhe.equipamentos && (
-              <div>
-                <span className="text-gray-400 text-xs">Equipamentos:</span>
-                <div className="text-white text-sm mt-0.5">
-                  {detalhe.equipamentos}
-                </div>
-              </div>
-            )}
             {detalhe.observacoes && (
               <div className="bg-white/5 rounded-lg p-3 text-xs text-gray-300">
                 {detalhe.observacoes}
+              </div>
+            )}
+            {detalhe.status === "rejeitado" && detalhe.motivo_rejeicao && (
+              <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 text-xs text-red-300">
+                Motivo da rejeição: {detalhe.motivo_rejeicao}
               </div>
             )}
           </div>
@@ -705,8 +611,9 @@ export default function Apontamento() {
         open={modalNovo}
         onClose={() => setModalNovo(false)}
         title={editando ? "Editar Apontamento" : "Novo Apontamento de Campo"}
+        size="lg"
       >
-        <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
+        <div className="space-y-4 max-h-[75vh] overflow-y-auto pr-1">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-gray-400 mb-1">
@@ -714,9 +621,8 @@ export default function Apontamento() {
               </label>
               <input
                 value={form.codigo}
-                onChange={(e) => setForm({ ...form, codigo: e.target.value })}
+                onChange={(e) => setField("codigo", e.target.value)}
                 disabled={!!editando}
-                placeholder="APT-2024-0627-A1"
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm disabled:opacity-50"
               />
             </div>
@@ -725,7 +631,7 @@ export default function Apontamento() {
               <input
                 type="date"
                 value={form.data}
-                onChange={(e) => setForm({ ...form, data: e.target.value })}
+                onChange={(e) => setField("data", e.target.value)}
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
               />
             </div>
@@ -734,108 +640,171 @@ export default function Apontamento() {
               <select
                 value={form.turno}
                 onChange={(e) =>
-                  setForm({ ...form, turno: e.target.value as Turno })
+                  setField("turno", e.target.value as TurnoTrabalho)
                 }
                 className="w-full bg-[#0a1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
               >
                 <option value="manha">Manhã</option>
                 <option value="tarde">Tarde</option>
                 <option value="noite">Noite</option>
+                <option value="integral">Integral</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-gray-400 mb-1">
+                Contrato *
+              </label>
+              <select
+                value={form.contrato_id}
+                onChange={(e) => setField("contrato_id", e.target.value)}
+                className="w-full bg-[#0a1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+              >
+                <option value="">Selecione...</option>
+                {contratos.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.numero}
+                  </option>
+                ))}
               </select>
             </div>
             <div>
               <label className="block text-xs text-gray-400 mb-1">Equipe</label>
               <select
-                value={form.equipe}
-                onChange={(e) => setForm({ ...form, equipe: e.target.value })}
+                value={form.equipe_id}
+                onChange={(e) => setField("equipe_id", e.target.value)}
                 className="w-full bg-[#0a1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
               >
-                {EQUIPES.map((eq) => (
-                  <option key={eq} value={eq}>
-                    {eq}
-                  </option>
-                ))}
+                <option value="">—</option>
+                {equipes
+                  .filter(
+                    (eq) =>
+                      !form.contrato_id ||
+                      String(eq.contrato_id) === form.contrato_id,
+                  )
+                  .map((eq) => (
+                    <option key={eq.id} value={eq.id}>
+                      {eq.nome}
+                    </option>
+                  ))}
               </select>
             </div>
             <div>
               <label className="block text-xs text-gray-400 mb-1">
-                Contrato
+                Atividade *
               </label>
               <select
-                value={form.contrato_codigo}
-                onChange={(e) =>
-                  setForm({ ...form, contrato_codigo: e.target.value })
-                }
+                value={form.atividade_id}
+                onChange={(e) => {
+                  const at = atividades.find(
+                    (a) => a.id === Number(e.target.value),
+                  );
+                  setForm((p) => ({
+                    ...p,
+                    atividade_id: e.target.value,
+                    unidade: at?.unidade_medida ?? p.unidade,
+                  }));
+                }}
                 className="w-full bg-[#0a1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
               >
-                {CONTRATOS.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
+                <option value="">Selecione...</option>
+                {atividades.map((a) => (
+                  <option key={a.id} value={a.id}>
+                    {a.codigo} — {a.nome}
                   </option>
                 ))}
               </select>
             </div>
+          </div>
+
+          <div className="border border-blue-500/20 rounded-xl p-4 space-y-3 bg-blue-500/5">
+            <p className="text-xs text-blue-400 font-semibold">
+              Posicionamento Rodoviário
+            </p>
             <div>
               <label className="block text-xs text-gray-400 mb-1">
-                Responsável
+                Trecho (opcional)
               </label>
-              <input
-                value={form.responsavel}
-                onChange={(e) =>
-                  setForm({ ...form, responsavel: e.target.value })
-                }
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-              />
+              <select
+                value={form.trecho_id}
+                onChange={(e) => setField("trecho_id", e.target.value)}
+                className="w-full bg-[#0a1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+              >
+                <option value="">— Sem trecho vinculado —</option>
+                {trechosContrato.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.descricao}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="grid grid-cols-4 gap-3">
+              <div>
+                <label className="block text-xs text-gray-400 mb-1">
+                  Km inicial
+                </label>
+                <input
+                  type="number"
+                  value={form.km_inicial}
+                  onChange={(e) => setField("km_inicial", e.target.value)}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-gray-400 mb-1">
+                  Km final
+                </label>
+                <input
+                  type="number"
+                  value={form.km_final}
+                  onChange={(e) => setField("km_final", e.target.value)}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-gray-400 mb-1">
+                  Sentido
+                </label>
+                <select
+                  value={form.sentido}
+                  onChange={(e) => setField("sentido", e.target.value)}
+                  className="w-full bg-[#0a1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                >
+                  <option value="">—</option>
+                  {SENTIDOS.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs text-gray-400 mb-1">Lado</label>
+                <select
+                  value={form.lado}
+                  onChange={(e) => setField("lado", e.target.value)}
+                  className="w-full bg-[#0a1628] border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                >
+                  <option value="">—</option>
+                  {LADOS.map((l) => (
+                    <option key={l} value={l}>
+                      {l}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
-          <div>
-            <label className="block text-xs text-gray-400 mb-1">
-              Localização *
-            </label>
-            <input
-              value={form.localizacao}
-              onChange={(e) =>
-                setForm({ ...form, localizacao: e.target.value })
-              }
-              placeholder="BR-163 KM 147+200 a KM 147+800"
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-            />
-          </div>
-          <div>
-            <label className="block text-xs text-gray-400 mb-1">
-              Serviço *
-            </label>
-            <input
-              value={form.descricao_servico}
-              onChange={(e) =>
-                setForm({ ...form, descricao_servico: e.target.value })
-              }
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-            />
-          </div>
-          <div className="grid grid-cols-3 gap-4">
+
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-gray-400 mb-1">
-                Comp. (ref.)
-              </label>
-              <input
-                value={form.composicao}
-                onChange={(e) =>
-                  setForm({ ...form, composicao: e.target.value })
-                }
-                placeholder="COMP-001"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-xs text-gray-400 mb-1">
-                Quantidade
+                Quantidade Executada
               </label>
               <input
                 type="number"
-                value={form.quantidade}
+                value={form.quantidade_executada}
                 onChange={(e) =>
-                  setForm({ ...form, quantidade: e.target.value })
+                  setField("quantidade_executada", e.target.value)
                 }
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
               />
@@ -846,23 +815,11 @@ export default function Apontamento() {
               </label>
               <input
                 value={form.unidade}
-                onChange={(e) => setForm({ ...form, unidade: e.target.value })}
+                onChange={(e) => setField("unidade", e.target.value)}
+                placeholder="m², t, m³, un..."
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
               />
             </div>
-          </div>
-          <div>
-            <label className="block text-xs text-gray-400 mb-1">
-              Equipamentos utilizados
-            </label>
-            <input
-              value={form.equipamentos}
-              onChange={(e) =>
-                setForm({ ...form, equipamentos: e.target.value })
-              }
-              placeholder="Escavadeira QHB-2841, Motoniveladora MTR-0412..."
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-            />
           </div>
           <div>
             <label className="block text-xs text-gray-400 mb-1">
@@ -870,9 +827,7 @@ export default function Apontamento() {
             </label>
             <textarea
               value={form.observacoes}
-              onChange={(e) =>
-                setForm({ ...form, observacoes: e.target.value })
-              }
+              onChange={(e) => setField("observacoes", e.target.value)}
               rows={2}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm resize-none"
             />
@@ -886,9 +841,7 @@ export default function Apontamento() {
             </button>
             <button
               onClick={salvar}
-              disabled={
-                !form.codigo || !form.descricao_servico || !form.localizacao
-              }
+              disabled={!form.codigo || !form.contrato_id || !form.atividade_id}
               className="bg-[#f97316] disabled:opacity-40 hover:bg-[#ea580c] text-white font-semibold px-6 py-2 rounded-lg text-sm"
             >
               Salvar

@@ -7,12 +7,110 @@ interface AuthContextValue {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   isAuthenticated: boolean;
+  hasRole: (...roles: Role[]) => boolean;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-/* Usuários de demonstração — funcionam sem backend */
 const DEMO_USERS: Record<string, Omit<User, "id"> & { senha: string }> = {
+  // ── Novos — primus.com ────────────────────────────────────────────────
+  "diretor@primus.com": {
+    name: "Carlos Henrique Diretor",
+    email: "diretor@primus.com",
+    role: "gestor",
+    setor: "Diretoria",
+    ativo: true,
+    senha: "123456",
+  },
+  "gestor@primus.com": {
+    name: "Ana Paula Gestora",
+    email: "gestor@primus.com",
+    role: "gestor",
+    setor: "Gestão Geral",
+    ativo: true,
+    senha: "123456",
+  },
+  "engenharia@primus.com": {
+    name: "Rodrigo Engenheiro Civil",
+    email: "engenharia@primus.com",
+    role: "engenheiro",
+    setor: "Engenharia",
+    ativo: true,
+    senha: "123456",
+  },
+  "pcp@primus.com": {
+    name: "Fernanda PCP",
+    email: "pcp@primus.com",
+    role: "pcp",
+    setor: "PCP",
+    ativo: true,
+    senha: "123456",
+  },
+  "lider@primus.com": {
+    name: "Ana Líder de Campo",
+    email: "lider@primus.com",
+    role: "lider_campo",
+    setor: "Operações",
+    ativo: true,
+    senha: "123456",
+  },
+  "operador@primus.com": {
+    name: "Pedro Operador de Máquinas",
+    email: "operador@primus.com",
+    role: "operador",
+    setor: "Campo",
+    ativo: true,
+    senha: "123456",
+  },
+  "motorista@primus.com": {
+    name: "Paulo Motorista",
+    email: "motorista@primus.com",
+    role: "motorista",
+    setor: "Logística",
+    ativo: true,
+    senha: "123456",
+  },
+  "mecanico@primus.com": {
+    name: "João Mecânico",
+    email: "mecanico@primus.com",
+    role: "mecanico",
+    setor: "Manutenção",
+    ativo: true,
+    senha: "123456",
+  },
+  "rh@primus.com": {
+    name: "Cláudia RH",
+    email: "rh@primus.com",
+    role: "rh",
+    setor: "RH",
+    ativo: true,
+    senha: "123456",
+  },
+  "qualidade@primus.com": {
+    name: "Marcos Qualidade",
+    email: "qualidade@primus.com",
+    role: "qualidade",
+    setor: "Qualidade",
+    ativo: true,
+    senha: "123456",
+  },
+  "seguranca@primus.com": {
+    name: "Patrícia Segurança",
+    email: "seguranca@primus.com",
+    role: "seguranca_trabalho",
+    setor: "SESMT",
+    ativo: true,
+    senha: "123456",
+  },
+  "almoxarife@primus.com": {
+    name: "Roberto Almoxarife",
+    email: "almoxarife@primus.com",
+    role: "almoxarife",
+    setor: "Almoxarifado",
+    ativo: true,
+    senha: "123456",
+  },
+  // ── Legados — instrucao.com ───────────────────────────────────────────
   "diretoria@instrucao.com": {
     name: "Carlos Henrique",
     email: "diretoria@instrucao.com",
@@ -116,7 +214,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
     } catch {
-      /* API indisponível → tenta modo demo */
       const mockUser = demoLogin(email, password);
       if (!mockUser) throw new Error("E-mail ou senha inválidos.");
       localStorage.setItem("token", "demo-token");
@@ -135,9 +232,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const hasRole = useCallback(
+    (...roles: Role[]) => !!user && roles.includes(user.role),
+    [user],
+  );
+
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, isAuthenticated: !!user }}
+      value={{ user, login, logout, isAuthenticated: !!user, hasRole }}
     >
       {children}
     </AuthContext.Provider>

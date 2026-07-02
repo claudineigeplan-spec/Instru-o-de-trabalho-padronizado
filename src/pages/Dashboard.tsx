@@ -11,34 +11,34 @@ import { formatDateTime } from "../utils/format";
 
 const CONTRATOS_MOCK = [
   {
-    codigo: "CON-2024-001",
-    nome: "Pavimentação BR-163 — Lote 3",
-    valor: 18400000,
-    executado: 38,
+    codigo: "DER-2024-001",
+    nome: "Conserva SP-310 — Araçatuba / Birigui",
+    valor: 5120000,
+    executado: 22,
     status: "ativo",
     cor: "#10b981",
   },
   {
-    codigo: "CON-2024-002",
-    nome: "Acesso Industrial — Parque Emp.",
-    valor: 4200000,
-    executado: 100,
-    status: "concluido",
-    cor: "#64748b",
-  },
-  {
-    codigo: "CON-2024-003",
-    nome: "Drenagem Zona Norte — Cuiabá",
-    valor: 7800000,
-    executado: 22,
+    codigo: "DER-2024-002",
+    nome: "Conserva SP-461 — Penápolis / Birigui",
+    valor: 2980000,
+    executado: 31,
     status: "ativo",
     cor: "#3b82f6",
   },
   {
-    codigo: "CON-2024-004",
-    nome: "Conservação MT-208 — Lote 12",
-    valor: 3100000,
-    executado: 61,
+    codigo: "PREF-2024-003",
+    nome: "Terraplenagem — Lot. Industrial Norte",
+    valor: 1820000,
+    executado: 56,
+    status: "ativo",
+    cor: "#8b5cf6",
+  },
+  {
+    codigo: "DER-2024-004",
+    nome: "Recapeamento SP-595 — Km 48 a 72",
+    valor: 7340000,
+    executado: 33,
     status: "ativo",
     cor: "#f97316",
   },
@@ -47,43 +47,43 @@ const CONTRATOS_MOCK = [
 const ATIVIDADE_MOCK = [
   {
     icone: "📐",
-    texto: "BM-2024-001-02 aprovado pela SINFRA",
+    texto: "BM-DER-001-02 aprovado pelo DER-SP — R$ 312K liberados",
     tempo: "há 2h",
     cor: "#10b981",
   },
   {
     icone: "📲",
-    texto: "9 apontamentos enviados pela Equipe B",
+    texto: "11 apontamentos enviados pela Equipe C (SP-310 Km 418–432)",
     tempo: "há 3h",
     cor: "#3b82f6",
   },
   {
     icone: "⚠️",
-    texto: "Estoque de CBUQ zerado — reposição pendente",
+    texto: "Estoque de CBUQ abaixo do mínimo — reposição pendente",
     tempo: "há 4h",
     cor: "#ef4444",
   },
   {
     icone: "🛠️",
-    texto: "OS-0142 concluída: revisão CAT 336 GC",
+    texto: "OS-0198 concluída: revisão preventiva Patrol GD655A",
     tempo: "há 5h",
     cor: "#f97316",
   },
   {
     icone: "📦",
-    texto: "PC-2024-020 recebido parcialmente (60t CBUQ)",
+    texto: "PC-2026-018 recebido parcialmente — 55t CBUQ (SP-595)",
     tempo: "há 6h",
     cor: "#8b5cf6",
   },
   {
     icone: "🗓️",
-    texto: "PCP semana 27 publicado para todas as equipes",
+    texto: "PCP semana 27 publicado — 4 frentes ativas",
     tempo: "ontem",
     cor: "#06b6d4",
   },
   {
     icone: "✅",
-    texto: "15 checklists pré-operacionais realizados hoje",
+    texto: "18 checklists pré-operacionais realizados hoje",
     tempo: "ontem",
     cor: "#10b981",
   },
@@ -92,37 +92,37 @@ const ATIVIDADE_MOCK = [
 const ALERTAS_MOCK = [
   {
     tipo: "critico",
-    texto: "Correia dentada Randon 2018 abaixo do estoque mínimo",
+    texto: "CBUQ — estoque abaixo do mínimo (DER-2024-004 em risco)",
     modulo: "/suprimentos",
   },
   {
     tipo: "critico",
-    texto: "Apontamento APT-2024-0619-D1 rejeitado — aguarda reenvio",
+    texto: "Apontamento APT-2026-0628-C1 rejeitado — aguarda reenvio",
     modulo: "/apontamento",
   },
   {
     tipo: "atencao",
-    texto: "BM-2024-002-01 em análise há 12 dias — cobrar fiscalização",
+    texto: "BM-DER-002-01 em análise há 9 dias — cobrar fiscalização DER",
     modulo: "/medicao",
   },
   {
     tipo: "atencao",
-    texto: "Carreta CRT-9910 em manutenção — 3 viagens postergadas",
-    modulo: "/logistica",
+    texto: "Patrol GD655A parada — DM abaixo de 85% na semana",
+    modulo: "/horas-maquina",
   },
   {
     tipo: "info",
-    texto: "3 requisições pendentes de aprovação em Suprimentos",
+    texto: "4 requisições pendentes de aprovação em Suprimentos",
     modulo: "/suprimentos",
   },
 ];
 
 const MODULOS_RAPIDOS = [
   {
-    label: "Projetos",
+    label: "Contratos",
     sub: "4 contratos ativos",
     icon: "📁",
-    to: "/projetos",
+    to: "/contratos",
     cor: "#f97316",
   },
   {
@@ -134,52 +134,45 @@ const MODULOS_RAPIDOS = [
   },
   {
     label: "Medição",
-    sub: "2 BMs em andamento",
+    sub: "3 BMs em andamento",
     icon: "📐",
     to: "/medicao",
     cor: "#10b981",
   },
   {
     label: "Apontamento",
-    sub: "9 enviados hoje",
+    sub: "11 enviados hoje",
     icon: "📲",
     to: "/apontamento",
     cor: "#3b82f6",
   },
   {
     label: "Suprimentos",
-    sub: "3 requisições pendentes",
+    sub: "4 requisições pendentes",
     icon: "📦",
     to: "/suprimentos",
     cor: "#06b6d4",
   },
   {
     label: "Manutenção",
-    sub: "5 OS abertas",
+    sub: "6 OS abertas",
     icon: "🛠️",
     to: "/manutencao",
     cor: "#ef4444",
   },
   {
-    label: "Logística",
-    sub: "3 veículos em viagem",
-    icon: "🚛",
-    to: "/logistica",
-    cor: "#f5c518",
+    label: "Horas Máquina",
+    sub: "DM 88% semana",
+    icon: "⛽",
+    to: "/horas-maquina",
+    cor: "#f97316",
   },
   {
     label: "Engenharia",
-    sub: "2 orçamentos em elaboração",
+    sub: "3 orçamentos em análise",
     icon: "⚙️",
     to: "/engenharia",
     cor: "#a78bfa",
-  },
-  {
-    label: "Indicadores",
-    sub: "R$ 840K custo mês",
-    icon: "📉",
-    to: "/indicadores",
-    cor: "#64748b",
   },
   {
     label: "Equipes",
@@ -189,11 +182,18 @@ const MODULOS_RAPIDOS = [
     cor: "#10b981",
   },
   {
-    label: "Logística",
-    sub: "8 abastecimentos registrados",
-    icon: "⛽",
-    to: "/logistica",
-    cor: "#f97316",
+    label: "Colaboradores",
+    sub: "18 colaboradores ativos",
+    icon: "👤",
+    to: "/colaboradores",
+    cor: "#06b6d4",
+  },
+  {
+    label: "Indicadores",
+    sub: "R$ 980K custo mês",
+    icon: "📉",
+    to: "/indicadores",
+    cor: "#64748b",
   },
   {
     label: "Relatórios",
@@ -244,26 +244,26 @@ function PainelExecutivo() {
           <div className="text-gray-400 text-xs mb-1">Contratos Ativos</div>
           <div className="text-3xl font-bold text-white">4</div>
           <div className="text-xs text-[#f97316] mt-1">
-            R$ 33,5M em carteira
+            R$ 17,3M em carteira
           </div>
         </GlassCard>
         <GlassCard>
           <div className="text-gray-400 text-xs mb-1">Medição do Mês</div>
-          <div className="text-2xl font-bold text-green-400">R$ 1,4M</div>
-          <div className="text-xs text-gray-400 mt-1">2 BMs em análise</div>
+          <div className="text-2xl font-bold text-green-400">R$ 1,2M</div>
+          <div className="text-xs text-gray-400 mt-1">3 BMs em análise</div>
         </GlassCard>
         <GlassCard>
           <div className="text-gray-400 text-xs mb-1">Custo Operacional</div>
-          <div className="text-2xl font-bold text-[#f97316]">R$ 840K</div>
+          <div className="text-2xl font-bold text-[#f97316]">R$ 980K</div>
           <div className="text-xs text-gray-400 mt-1">
-            jun/2024 · todos os centros
+            jun/2026 · todos os centros
           </div>
         </GlassCard>
         <GlassCard>
           <div className="text-gray-400 text-xs mb-1">Equipes em Campo</div>
           <div className="text-3xl font-bold text-blue-400">4</div>
           <div className="text-xs text-gray-400 mt-1">
-            23 colaboradores hoje
+            18 colaboradores hoje
           </div>
         </GlassCard>
       </div>
@@ -276,7 +276,7 @@ function PainelExecutivo() {
               Andamento dos Contratos
             </h2>
             <Link
-              to="/projetos"
+              to="/contratos"
               className="text-xs text-[#f97316] hover:underline"
             >
               Ver todos →

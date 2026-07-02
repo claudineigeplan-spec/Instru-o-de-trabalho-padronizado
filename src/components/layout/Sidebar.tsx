@@ -12,77 +12,125 @@ interface NavItem {
   roles?: Role[];
 }
 
-const navItems: NavItem[] = [
-  { path: "/dashboard", label: "Dashboard", icon: "📊" },
+interface NavGroup {
+  label: string;
+  icon: string;
+  roles?: Role[];
+  items: NavItem[];
+}
+
+const GRUPOS: NavGroup[] = [
   {
-    path: "/projetos",
-    label: "Projetos e Contratos",
-    icon: "📁",
-    roles: ["gestor", "lider_campo"],
+    label: "Visão Geral",
+    icon: "📊",
+    items: [
+      { path: "/dashboard", label: "Dashboard", icon: "📊" },
+      {
+        path: "/indicadores",
+        label: "Indicadores Executivos",
+        icon: "📉",
+        roles: ["gestor", "diretor", "engenheiro", "pcp"],
+      },
+    ],
   },
   {
-    path: "/engenharia",
+    label: "Contratos & Projetos",
+    icon: "📁",
+    roles: [
+      "gestor",
+      "diretor",
+      "engenheiro",
+      "pcp",
+      "lider_campo",
+      "financeiro",
+    ],
+    items: [
+      { path: "/projetos", label: "Projetos e Contratos", icon: "📁" },
+      { path: "/centros-custo", label: "Centros de Custo", icon: "🏷️" },
+      { path: "/rodovias", label: "Rodovias e Trechos", icon: "🛣️" },
+      { path: "/medicao", label: "Medição", icon: "📐" },
+    ],
+  },
+  {
+    label: "PCP & Produção",
+    icon: "🗓️",
+    roles: [
+      "gestor",
+      "diretor",
+      "engenheiro",
+      "pcp",
+      "lider_campo",
+      "apontador",
+      "encarregado",
+    ],
+    items: [
+      { path: "/pcp", label: "PCP — Programação", icon: "🗓️" },
+      { path: "/apontamento", label: "Apontamento de Campo", icon: "📲" },
+      { path: "/horas-maquina", label: "Horas de Equipamento", icon: "⏱️" },
+    ],
+  },
+  {
     label: "Engenharia",
     icon: "⚙️",
-    roles: ["gestor", "lider_campo"],
+    roles: ["gestor", "diretor", "engenheiro", "pcp", "lider_campo"],
+    items: [
+      { path: "/engenharia", label: "Engenharia", icon: "⚙️" },
+      { path: "/atividades", label: "Atividades / Serviços", icon: "📋" },
+    ],
   },
   {
-    path: "/pcp",
-    label: "PCP — Planejamento",
-    icon: "🗓️",
-    roles: ["gestor", "lider_campo"],
-  },
-  {
-    path: "/medicao",
-    label: "Medição",
-    icon: "📐",
-    roles: ["gestor", "lider_campo"],
-  },
-  {
-    path: "/logistica",
-    label: "Logística",
-    icon: "🚛",
-    roles: ["gestor", "lider_campo"],
-  },
-  {
-    path: "/apontamento",
-    label: "Apontamento de Campo",
-    icon: "📲",
-    roles: ["gestor", "lider_campo"],
-  },
-  {
-    path: "/equipes",
-    label: "Equipes",
+    label: "Equipes & RH",
     icon: "👷",
-    roles: ["gestor", "lider_campo"],
+    roles: ["gestor", "diretor", "rh", "pcp", "lider_campo"],
+    items: [
+      { path: "/equipes", label: "Equipes de Campo", icon: "👷" },
+      { path: "/colaboradores", label: "Colaboradores", icon: "👥" },
+    ],
   },
   {
-    path: "/manutencao",
     label: "Manutenção",
     icon: "🛠️",
-    roles: ["gestor", "lider_campo", "mecanico"],
+    roles: [
+      "gestor",
+      "diretor",
+      "lider_campo",
+      "mecanico",
+      "operador",
+      "motorista",
+    ],
+    items: [
+      { path: "/manutencao", label: "Ordens de Serviço", icon: "🛠️" },
+      { path: "/planos", label: "Planos de Manutenção", icon: "📋" },
+      { path: "/checklists", label: "Checklists", icon: "✅" },
+      { path: "/equipamentos", label: "Equipamentos", icon: "🚜" },
+    ],
   },
   {
-    path: "/suprimentos",
     label: "Suprimentos",
     icon: "📦",
-    roles: ["gestor", "lider_campo"],
+    roles: ["gestor", "diretor", "almoxarife", "comprador", "lider_campo"],
+    items: [
+      { path: "/suprimentos", label: "Compras", icon: "🛒" },
+      { path: "/estoque", label: "Estoque / Almoxarifado", icon: "📦" },
+    ],
   },
   {
-    path: "/instrucoes",
-    label: "Instruções de Trabalho",
-    icon: "📝",
-    roles: ["gestor", "lider_campo", "mecanico"],
+    label: "Logística",
+    icon: "🚛",
+    roles: ["gestor", "diretor", "lider_campo", "motorista"],
+    items: [{ path: "/logistica", label: "Logística", icon: "🚛" }],
   },
-  { path: "/checklists", label: "Checklists", icon: "✅" },
   {
-    path: "/indicadores",
-    label: "Indicadores",
-    icon: "📉",
-    roles: ["gestor", "lider_campo"],
+    label: "Gestão",
+    icon: "📈",
+    roles: ["gestor", "diretor"],
+    items: [
+      { path: "/relatorios", label: "Relatórios", icon: "📈" },
+      { path: "/instrucoes", label: "Instruções de Trabalho", icon: "📝" },
+      { path: "/alertas", label: "Alertas", icon: "🔔" },
+      { path: "/usuarios", label: "Usuários", icon: "👤" },
+    ],
   },
-  { path: "/relatorios", label: "Relatórios", icon: "📈", roles: ["gestor"] },
-  { path: "/usuarios", label: "Usuários", icon: "👥", roles: ["gestor"] },
 ];
 
 export default function Sidebar() {
@@ -90,9 +138,10 @@ export default function Sidebar() {
   const navigate = useNavigate();
   const toast = useToast();
 
-  const visibleItems = navItems.filter(
-    (item) => !item.roles || item.roles.includes(user?.role as Role),
-  );
+  function podeVer(roles?: Role[]): boolean {
+    if (!roles) return true;
+    return !!user && roles.includes(user.role as Role);
+  }
 
   async function handleLogout() {
     await logout();
@@ -102,7 +151,7 @@ export default function Sidebar() {
 
   return (
     <aside className="w-64 bg-[#0a1628] border-r border-white/10 flex flex-col min-h-screen">
-      <div className="p-6 border-b border-white/10">
+      <div className="p-5 border-b border-white/10">
         <Link
           to="/"
           className="block group hover:opacity-80 transition-opacity"
@@ -114,44 +163,54 @@ export default function Sidebar() {
         </Link>
       </div>
 
-      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-        {visibleItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all ${
-                isActive
-                  ? "bg-[#1e3a8a] text-white font-medium"
-                  : "text-gray-400 hover:text-white hover:bg-white/5"
-              }`
-            }
-          >
-            <span>{item.icon}</span>
-            <span>{item.label}</span>
-          </NavLink>
-        ))}
+      <nav className="flex-1 py-3 overflow-y-auto">
+        {GRUPOS.map((grupo) => {
+          if (!podeVer(grupo.roles)) return null;
+
+          const itensVisiveis = grupo.items.filter((i) => podeVer(i.roles));
+          if (itensVisiveis.length === 0) return null;
+
+          return (
+            <div key={grupo.label} className="mb-1">
+              <p className="px-4 pt-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-gray-600 select-none">
+                {grupo.label}
+              </p>
+              {itensVisiveis.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className={({ isActive }) =>
+                    `flex items-center gap-2.5 mx-2 px-3 py-2 rounded-lg text-sm transition-all ${
+                      isActive
+                        ? "bg-[#1e3a8a] text-white font-medium"
+                        : "text-gray-400 hover:text-white hover:bg-white/5"
+                    }`
+                  }
+                >
+                  <span className="text-base leading-none">{item.icon}</span>
+                  <span>{item.label}</span>
+                </NavLink>
+              ))}
+            </div>
+          );
+        })}
       </nav>
 
-      <div className="p-4 border-t border-white/10 space-y-3">
-        <Link
-          to="/"
-          className="flex items-center gap-2 text-xs text-gray-500 hover:text-white transition-colors"
-        >
-          <span>🏠</span>
-          <span>Sobre o PRIMUS</span>
-        </Link>
-        <div className="text-xs text-gray-500">
-          <div className="text-white text-sm font-medium">{user?.name}</div>
-          <div className="mt-0.5 text-orange-400">
+      <div className="p-4 border-t border-white/10 space-y-2">
+        <div className="text-sm">
+          <div className="text-white font-medium truncate">{user?.name}</div>
+          <div className="text-orange-400 text-xs mt-0.5">
             {formatRole(user?.role ?? "")}
           </div>
+          {user?.setor && (
+            <div className="text-gray-500 text-xs">{user.setor}</div>
+          )}
         </div>
         <button
           onClick={handleLogout}
-          className="w-full text-xs text-gray-500 hover:text-red-400 transition-colors text-left"
+          className="w-full text-xs text-gray-500 hover:text-red-400 transition-colors text-left py-1"
         >
-          Sair
+          Sair do sistema
         </button>
       </div>
     </aside>
